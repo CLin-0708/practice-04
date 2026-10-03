@@ -11,8 +11,6 @@ const courses = [
   { name: '测试课', credit: 2, score: 105 }   // 故意混入非法成绩
 ];
 
-// 第二步：绩点转换与计算
-
 // 清洗：只保留0-100分的合法课程
 const cleanCourses = (list) => list.filter(c => c.score >= 0 && c.score <= 100);
 
@@ -42,11 +40,29 @@ const calcGpa = (list) => {
   return (totalPoint / totalCredit).toFixed(2);
 };
 
-// 打印中间结果
-const valid = cleanCourses(courses);
-console.log('清洗后课程数：', valid.length);
-console.log('每门课绩点：');
-valid.forEach(c => {
-  console.log(`  ${c.name}：成绩${c.score}，绩点${toPoint(c.score)}`);
-});
-console.log('总绩点：', calcGpa(valid));
+// 第三步：格式化完整报告
+const gpaReport = (list) => {
+  const valid = cleanCourses(list);
+  if (valid.length === 0) {
+    return '没有有效课程数据';
+  }
+  let totalCredit = 0;
+  valid.forEach(c => { totalCredit += c.credit; });
+  let detail = '';
+  valid.forEach(c => {
+    detail += `${c.name}（${c.credit}学分）：成绩${c.score}，绩点${toPoint(c.score)}
+`;
+  });
+  return `===== 绩点计算报告 =====
+有效课程${valid.length}门，总学分${totalCredit}
+总绩点：${calcGpa(valid)}
+
+各门课详情：
+${detail}`;
+};
+
+try {
+  console.log(gpaReport(courses));
+} catch (err) {
+  console.error('报告生成失败：', err.message);
+}
