@@ -99,3 +99,31 @@ validCourses.forEach(c => console.log(`  ${c.type} - ${c.name} - ${c.score}分`)
 const sorted = sortByTypeAndScore(validCourses);
 console.log('排序后（先公共课，同类别成绩降序）：');
 sorted.forEach(c => console.log(`  ${c.type} - ${c.name} - ${c.score}分`));
+
+// ===== 研究任务2：正则表达式校验手机号 =====
+// 正则：/^1[3-9]\d{9}$/
+// 逐段解释：
+// ^        表示字符串开头
+// 1        手机号第一位必须是1
+// [3-9]    第二位必须是3到9之间的数字
+// \d{9}    \d表示数字，{9}表示正好9个数字
+// $        表示字符串结尾
+// 合起来：1开头，第二位3-9，后面再跟9位数字，总共11位
+
+const phoneReg = /^1[3-9]\d{9}$/;
+
+// 测试数据
+const testPhones = [
+  '13812345678',  // 合法
+  '15987654321',  // 合法
+  '12345678901',  // 非法：第二位是2
+  '1381234567',   // 非法：只有10位
+  '138123456789', // 非法：12位
+  'abcdefghijk'   // 非法：不是数字
+];
+
+console.log('===== 研究任务2：手机号正则校验 =====');
+testPhones.forEach(phone => {
+  const result = phoneReg.test(phone);
+  console.log(`  ${phone}：${result ? '合法' : '不合法'}`);
+});
