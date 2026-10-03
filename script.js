@@ -1,14 +1,14 @@
 // 第一步：定义课程数据
 const courses = [
-  { name: '高等数学A', credit: 4, score: 92 },
-  { name: '大学英语一', credit: 3, score: 85 },
-  { name: '思想道德与政治', credit: 3, score: 88 },
-  { name: '体育一', credit: 1, score: 76 },
-  { name: '线性代数', credit: 3, score: 82 },
-  { name: '数据结构', credit: 4, score: 78 },
-  { name: '概率论A', credit: 3, score: 90 },
-  { name: '离散数学', credit: 3, score: 65 },
-  { name: '测试课', credit: 2, score: 105 }   // 故意混入非法成绩
+  { name: '高等数学A', credit: 4, score: 92, type: '公共课' },
+  { name: '大学英语一', credit: 3, score: 85, type: '公共课' },
+  { name: '思想道德与政治', credit: 3, score: 88, type: '公共课' },
+  { name: '体育一', credit: 1, score: 76, type: '公共课' },
+  { name: '线性代数', credit: 3, score: 82, type: '公共课' },
+  { name: '数据结构', credit: 4, score: 78, type: '专业课' },
+  { name: '概率论A', credit: 3, score: 90, type: '专业课' },
+  { name: '离散数学', credit: 3, score: 65, type: '专业课' },
+  { name: '测试课', credit: 2, score: 105, type: '测试' }   // 故意混入非法成绩
 ];
 
 // 清洗：只保留0-100分的合法课程
@@ -66,3 +66,36 @@ try {
 } catch (err) {
   console.error('报告生成失败：', err.message);
 }
+
+// ===== 研究任务1：排序深入研究 =====
+// sort比较函数规则：
+// 返回负数 -> a排在b前面
+// 返回正数 -> b排在a前面
+// 返回0 -> 位置不变
+
+// 按两个字段排序：先按类别（公共课在前），同类别再按成绩从高到低
+const sortByTypeAndScore = (list) => {
+  // 复制一份，不改动原数组
+  const copy = [...list];
+  copy.sort((a, b) => {
+    // 先比较类别
+    if (a.type !== b.type) {
+      // 公共课排前面，专业课排后面
+      if (a.type === '公共课') return -1;
+      if (b.type === '公共课') return 1;
+      return a.type.localeCompare(b.type);
+    }
+    // 类别相同，按成绩降序（高分在前）
+    return b.score - a.score;
+  });
+  return copy;
+};
+
+console.log('===== 研究任务1：排序结果 =====');
+const validCourses = cleanCourses(courses);
+console.log('排序前：');
+validCourses.forEach(c => console.log(`  ${c.type} - ${c.name} - ${c.score}分`));
+
+const sorted = sortByTypeAndScore(validCourses);
+console.log('排序后（先公共课，同类别成绩降序）：');
+sorted.forEach(c => console.log(`  ${c.type} - ${c.name} - ${c.score}分`));
