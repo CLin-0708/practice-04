@@ -127,3 +127,32 @@ testPhones.forEach(phone => {
   const result = phoneReg.test(phone);
   console.log(`  ${phone}：${result ? '合法' : '不合法'}`);
 });
+
+// ===== 研究任务3：性能对比实验（for循环 vs reduce） =====
+// 构造10万条大样本课程数据以测量毫秒级耗时差异
+const largeCourses = Array.from({ length: 100000 }, (_, i) => ({
+  name: `课程${i + 1}`,
+  credit: (i % 4) + 1,
+  score: 60 + (i % 41),
+  type: i % 2 === 0 ? '公共课' : '专业课'
+}));
+
+console.log('===== 研究任务3：性能对比实验（10万条数据） =====');
+
+// 1. 传统for循环统计总分
+console.time('for循环耗时');
+let totalScoreFor = 0;
+for (let i = 0; i < largeCourses.length; i++) {
+  totalScoreFor += largeCourses[i].score;
+}
+const avgScoreFor = (totalScoreFor / largeCourses.length).toFixed(2);
+console.timeEnd('for循环耗时');
+
+// 2. reduce高阶函数统计总分
+console.time('reduce耗时');
+const totalScoreReduce = largeCourses.reduce((sum, c) => sum + c.score, 0);
+const avgScoreReduce = (totalScoreReduce / largeCourses.length).toFixed(2);
+console.timeEnd('reduce耗时');
+
+console.log(`for循环计算：总分${totalScoreFor}，平均分${avgScoreFor}`);
+console.log(`reduce计算：总分${totalScoreReduce}，平均分${avgScoreReduce}`);
